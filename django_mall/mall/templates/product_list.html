@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block title %}
+        <title>产品列表</title>
+{% endblock %}
+{% block container %}
+<!--顶部搜索-->
+<header class='weui-header fixed-top'>
+    <div class="weui-search-bar" id="searchBar">
+        <form class="weui-search-bar__form" method="get" action=".">
+            <div class="weui-search-bar__box">
+                <i class="weui-icon-search"></i>
+                <input type="search" class="weui-search-bar__input" id="searchInput"
+                       name="name"
+                       placeholder="搜索您想要的商品" required>
+                <a href="javascript:" class="weui-icon-clear" id="searchClear"></a>
+            </div>
+            <label class="weui-search-bar__label" id="searchText"
+                   style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
+                <i class="weui-icon-search"></i>
+                <span>搜索您想要的商品</span>
+            </label>
+        </form>
+        <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel">取消</a>
+    </div>
+    <div class="pro-sort">
+        <div class="weui-flex">
+            <div class="weui-flex__item">
+                <div class="placeholder NormalCss">综合</div>
+            </div>
+            <div class="weui-flex__item">
+                <div class="placeholder SortAscCss">按销量</div>
+            </div>
+            <div class="weui-flex__item">
+                <div class="placeholder SortDescCss">按价格</div>
+            </div>
+        </div>
+    </div>
+    </div>
+</header>
+<!--主体-->
+<div class="weui-content" style="padding-top:85px;">
+    <!--产品列表--滑动加载-->
+    <div class="weui-pull-to-refresh__layer">
+        <div class='weui-pull-to-refresh__arrow'></div>
+        <div class='weui-pull-to-refresh__preloader'></div>
+        <div class="down">下拉刷新</div>
+        <div class="up">释放刷新</div>
+        <div class="refresh">正在刷新</div>
+    </div>
+    <div id="list" class='demos-content-padded proListWrap'>
+
+    </div>
+    <div class="weui-loadmore" id="loading">
+        <i class="weui-loading"></i>
+        <span class="weui-loadmore__tips">正在加载</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+
+<script>
+    var loading = false;  // 是否正在加载中
+    var page = 1; // 当前页
+    var noMore = false; // 是否还有下一页
+    /**
+     * 封装函数，异步取数据
+     * @param callback
+     */
+    function loadData(callback) {
+        if(loading) return;
+        if(noMore) return;
+        loading = true;
+        $('#loading').show();
+        $.ajax({
+            url: '{% url 'mall:product_load_list' %}',
+            data: {
+                page: page,
+                tag:"{{ params.tag|default_if_none:'' }}",
+                name:"{{ params.name|default_if_none:'' }}",
+                cls:"{{ params.cls|default_if_none:'' }}",
+            },
+            success: function(rest) {
+                // 添加HTML片段到内容区
+                $('#list').append(rest);
+                page++;  // 页码加1
+                loading = false;
+                $('#loading').hide()
+                // 如果有回调函数，则调用
+                if (callback) {
+                    callback()
+                }
+            }
+        })
+    }
+      $(document.body).pullToRefresh().on("pull-to-refresh", function() {
+          $("#list").empty();
+          page = 1;
+          noMore = false;
+          loadData(function () {
+              $(document.body).pullToRefreshDone();   //停止加载
+          })
+      });
+      // infinite
+
+      $(document.body).infinite(150).on("infinite", function() {
+        loadData(); // 加载数据
+      });
+      loadData();//默认加载第一页
+</script>
+{% endblock %}

@@ -1,0 +1,39 @@
+<!--底部导航-->
+<div class="foot-black"></div>
+<div class="weui-tabbar wy-foot-menu">
+    <a href="{% url 'index' %}" class="weui-tabbar__item
+    {% if tab == 'index' %}
+        weui-bar__item--on
+    {% endif %}">
+        <div class="weui-tabbar__icon foot-menu-home"> </div>
+        <p class="weui-tabbar__label">首页</p>
+    </a>
+
+    <a href="{% url 'mall:prod_classify' %}" class="weui-tabbar__item
+    {% if tab == 'classify' %}
+        weui-bar__item--on
+    {% endif %}">
+    <div class="weui-tabbar__icon foot-menu-list"></div>
+    <p class="weui-tabbar__label">分类</p>
+    </a>
+
+    <a href="{% url 'mine:cart' %}" class="weui-tabbar__item
+    {% if tab == 'cart' %}
+        weui-bar__item--on
+    {% endif %}">
+        {% if cart_count > 0 %}
+        <span class="weui-badge" style="position: absolute;top: -.4em;right: 1em;">
+            {{ cart_count }}</span>
+        {% endif %}
+        <div class="weui-tabbar__icon foot-menu-cart"></div>
+        <p class="weui-tabbar__label">购物车</p>
+    </a>
+
+    <a href="{% url 'mine:index' %}" class="weui-tabbar__item
+    {% if tab == 'mine' %}
+       weui-bar__item--on
+    {% endif %}">
+        <div class="weui-tabbar__icon foot-menu-member"></div>
+        <p class="weui-tabbar__label">我的</p>
+    </a>
+</div>

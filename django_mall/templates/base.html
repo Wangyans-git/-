@@ -1,0 +1,54 @@
+<!-- 页面主体架构 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+
+    <link rel="stylesheet" href="/static/lib/weui.min.css"/>
+    <link rel="stylesheet" href="/static/css/jquery-weui.css"/>
+    <link rel="stylesheet" href="/static/css/style.css"/>
+    {% block title %}
+{#   页面的头部信息，可添加头部标签  ，css，js title   #}
+        <title>积分商城首页</title>
+        <meta name="description" content=""/>
+    {% endblock %}
+</head>
+<body ontouchstart class ="container">
+
+    {% block container %}
+    {#  页面的内容区域   #}
+    {% endblock %}
+
+<script src="/static/lib/jquery-2.1.4.js"></script>
+<script src="/static/lib/fastclick.js"></script>
+    <script src="/static/js/jquery-weui.js"></script>
+<script>
+    //手机端事件穿透
+    $(function () {
+        FastClick.attach(document.body);
+    });
+    //返回事件
+    $(".wy-header-icon-back").click(function () {
+        history.go(-1)
+    })
+    {% if messages %}
+        {% for msg in messages %}
+            $.toptip('{{msg}}','{{msg.tags}}');
+        {% endfor %}
+    {% endif %}
+</script>
+
+    {% block footer %}
+    {# 页面底部，可以放html片段，可以添新的js #}
+    {% endblock %}
+</body>
+</html>
